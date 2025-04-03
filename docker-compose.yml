@@ -1,0 +1,56 @@
+services:
+    gateway:
+        build:
+            context: .
+            dockerfile: ./apps/gateway/Dockerfile
+            target: development
+        command: npm run start:dev gateway
+        ports:
+            - '3000:3000'
+        volumes:
+            - .:/usr/src/app
+            - /usr/src/app/node_modules
+        env_file:
+            - ./apps/gateway/.env
+    mysql:
+        image: mysql:5.7
+        platform: linux/amd64
+        ports:
+            - '${MYSQL_PORT}:3306'
+        volumes:
+            - ./mysql/data:/var/lib/mysql
+            - ./mysql/my.cnf:/etc/mysql/my.cnf
+        healthcheck:
+            test:
+                [
+                    'CMD',
+                    'mysqladmin',
+                    'ping',
+                    '-h',
+                    'mysql',
+                    '-u',
+                    'root',
+                    '-p${MYSQL_PASSWORD}',
+                ]
+            interval: 5s
+            timeout: 5s
+            retries: 10
+            start_period: 5s
+        env_file:
+            - ./apps/gateway/.env
+        environment:
+            TZ: Asia/Seoul
+            MYSQL_PASSWORD: '${MYSQL_PASSWORD}'
+            MYSQL_DATABASE: '${MYSQL_DATABASE}'
+            MYSQL_ROOT_PASSWORD: '${MYSQL_PASSWORD}'
+
+    # webui:
+    #     image: ghcr.io/open-webui/open-webui:main
+    #     # platform: linux/amd64
+    #     restart: always
+    #     ports:
+    #         - '80:8080'
+    #     extra_hosts:
+    #         - 'host.docker.internal:host-gateway'
+    #     volumes:
+    #         - ./webui:/app/backend/data
