@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import validateionSchema from './common/config/validateion.schema';
-import { AppController } from './app.controller';
 
 @Module({
     imports: [
@@ -10,6 +9,6 @@ import { AppController } from './app.controller';
             validationSchema: validateionSchema,
         }),
     ],
-    controllers: [AppController],
+    controllers: [],
 })
 export class AppModule {}
