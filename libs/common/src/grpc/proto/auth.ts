@@ -23,13 +23,23 @@ export interface FindOrCreateUserResponse {
   id: string;
 }
 
-export interface IssueTokenByGithubIdRequest {
+export interface IssueTokenByUserIdRequest {
   id: string;
 }
 
-export interface IssueTokenByGithubIdResponse {
+export interface IssueTokenByUserIdResponse {
   accessToken: string;
   refreshToken: string;
+}
+
+export interface VerifyTokenRequest {
+  token: string;
+  isRefresh: boolean;
+}
+
+export interface VerifyTokenResponse {
+  sub: string;
+  type: string;
 }
 
 export const AUTH_PACKAGE_NAME = "auth";
@@ -37,10 +47,9 @@ export const AUTH_PACKAGE_NAME = "auth";
 export interface AuthServiceClient {
   findOrCreateUser(request: FindOrCreateUserRequest, metadata?: Metadata): Observable<FindOrCreateUserResponse>;
 
-  issueTokenByGithubId(
-    request: IssueTokenByGithubIdRequest,
-    metadata?: Metadata,
-  ): Observable<IssueTokenByGithubIdResponse>;
+  issueTokenByUserId(request: IssueTokenByUserIdRequest, metadata?: Metadata): Observable<IssueTokenByUserIdResponse>;
+
+  verifyToken(request: VerifyTokenRequest, metadata?: Metadata): Observable<VerifyTokenResponse>;
 }
 
 export interface AuthServiceController {
@@ -49,15 +58,20 @@ export interface AuthServiceController {
     metadata?: Metadata,
   ): Promise<FindOrCreateUserResponse> | Observable<FindOrCreateUserResponse> | FindOrCreateUserResponse;
 
-  issueTokenByGithubId(
-    request: IssueTokenByGithubIdRequest,
+  issueTokenByUserId(
+    request: IssueTokenByUserIdRequest,
     metadata?: Metadata,
-  ): Promise<IssueTokenByGithubIdResponse> | Observable<IssueTokenByGithubIdResponse> | IssueTokenByGithubIdResponse;
+  ): Promise<IssueTokenByUserIdResponse> | Observable<IssueTokenByUserIdResponse> | IssueTokenByUserIdResponse;
+
+  verifyToken(
+    request: VerifyTokenRequest,
+    metadata?: Metadata,
+  ): Promise<VerifyTokenResponse> | Observable<VerifyTokenResponse> | VerifyTokenResponse;
 }
 
 export function AuthServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = ["findOrCreateUser", "issueTokenByGithubId"];
+    const grpcMethods: string[] = ["findOrCreateUser", "issueTokenByUserId", "verifyToken"];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
       GrpcMethod("AuthService", method)(constructor.prototype[method], method, descriptor);

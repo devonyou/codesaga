@@ -5,7 +5,8 @@ package auth;
 
 service AuthService {
     rpc FindOrCreateUser(FindOrCreateUserRequest) returns (FindOrCreateUserResponse) {} 
-    rpc issueTokenByGithubId(IssueTokenByGithubIdRequest) returns (IssueTokenByGithubIdResponse) {}
+    rpc issueTokenByUserId(IssueTokenByUserIdRequest) returns (IssueTokenByUserIdResponse) {}
+    rpc verifyToken(VerifyTokenRequest) returns (VerifyTokenResponse) {}
 }
 
 message FindOrCreateUserRequest {
@@ -20,11 +21,21 @@ message FindOrCreateUserResponse {
     string id = 1;
 }
 
-message IssueTokenByGithubIdRequest {
+message IssueTokenByUserIdRequest {
     string id = 1;
 }
 
-message IssueTokenByGithubIdResponse {
+message IssueTokenByUserIdResponse {
     string accessToken = 1;
     string refreshToken = 2;
 }
+
+message VerifyTokenRequest {
+    string token = 1;
+    bool isRefresh = 2;
+}
+
+message VerifyTokenResponse {
+    string sub = 1;
+    string type = 2;
+}   

@@ -8,7 +8,7 @@ import {
     VersionColumn,
 } from 'typeorm';
 
-@Entity()
+@Entity('user')
 @Unique(['providerId'])
 export class UserEntity {
     @PrimaryGeneratedColumn('uuid')

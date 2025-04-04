@@ -1,8 +1,11 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { GithubGuard } from './guard/github.guard';
-import { GithubOAuth } from './decorator/github.oauth.decorator';
-import { GithubOAuthDto } from './dto/github.oauth.dto';
+import { Auth } from './decorator/auth.decorator';
+import { AuthPayload } from './dto/auth.payload';
+import { RefreshGuard } from './guard/refresh.guard';
+import { User } from './decorator/user.decorator';
+import { JwtPayload } from './dto/jwt.payload';
 
 @Controller('auth')
 export class AuthController {
@@ -14,7 +17,13 @@ export class AuthController {
 
     @Get('github/callback')
     @UseGuards(GithubGuard)
-    async callbackToGithub(@GithubOAuth() oauth: GithubOAuthDto) {
-        return await this.authService.issueTokenByGithubId(oauth.profile);
+    async callbackToGithub(@Auth() auth: AuthPayload) {
+        return await this.authService.issueTokenByUserId(auth.id);
+    }
+
+    @Post('refresh')
+    @UseGuards(RefreshGuard)
+    async issueToken(@User() user: JwtPayload) {
+        return await this.authService.issueTokenByUserId(user.sub);
     }
 }

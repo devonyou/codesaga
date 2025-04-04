@@ -28,10 +28,8 @@ export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
         // TODO: access token save > redis
         this.logger.verbose(accessToken, refreshToken);
 
-        await this.authService.findOrCreateUser(profile._json);
+        const user = await this.authService.findOrCreateUser(profile._json);
 
-        return {
-            profile: profile._json,
-        };
+        return user;
     }
 }

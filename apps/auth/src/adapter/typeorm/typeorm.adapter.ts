@@ -11,6 +11,12 @@ export class TypeormAdapter implements DatabaseOutPort {
         private readonly userRepository: Repository<UserEntity>,
     ) {}
 
+    async findUserById(userId: string): Promise<UserDomain> {
+        const user = await this.userRepository.findOneBy({ id: userId });
+        if (user) return new UserEntityMapper(user).toDomain();
+        else return null;
+    }
+
     async findUserByProviderId(providerId: string): Promise<UserDomain> {
         const user = await this.userRepository.findOneBy({ providerId });
         if (user) return new UserEntityMapper(user).toDomain();
