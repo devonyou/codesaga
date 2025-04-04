@@ -8,11 +8,10 @@ import {
 } from '@nestjs/common';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { HttpSuccessInterceptor } from './common/interceptor/http.success.interceptor';
-import { HttpExceptionFilter } from './common/filter/http.exception.filter';
+import { GrpcToHttpInterceptor } from 'nestjs-grpc-exceptions';
+import { HttpExceptionFilter } from '../common/filter/http.exception.filter';
 
 class Server {
-    private logger = new Logger('SERVER');
     private configService: ConfigService;
     private HTTP_PORT: number;
 
@@ -36,31 +35,27 @@ class Server {
     }
 
     private setupSwagger() {
-        try {
-            const config = new DocumentBuilder()
-                .setTitle(this.configService.get<string>('SWAGGER_TITLE'))
-                .setDescription(
-                    this.configService.get<string>('SWAGGER_DESCRIPTION'),
-                )
-                .setVersion(this.configService.get<string>('SWAGGER_VERSION'))
-                .build();
+        const config = new DocumentBuilder()
+            .setTitle(this.configService.get<string>('SWAGGER_TITLE'))
+            .setDescription(
+                this.configService.get<string>('SWAGGER_DESCRIPTION'),
+            )
+            .setVersion(this.configService.get<string>('SWAGGER_VERSION'))
+            .build();
 
-            const document = SwaggerModule.createDocument(this.app, config);
-            SwaggerModule.setup(
-                this.configService.get<string>('SWAGGER_PATH'),
-                this.app,
-                document,
-            );
-        } catch (error) {
-            this.logger.error(error);
-        }
+        const document = SwaggerModule.createDocument(this.app, config);
+        SwaggerModule.setup(
+            this.configService.get<string>('SWAGGER_PATH'),
+            this.app,
+            document,
+        );
     }
 
     private setupGlobalInterceptor() {
         this.app.useGlobalInterceptors(
             new ClassSerializerInterceptor(this.app.get(Reflector)),
         );
-        this.app.useGlobalInterceptors(new HttpSuccessInterceptor());
+        this.app.useGlobalInterceptors(new GrpcToHttpInterceptor());
     }
 
     private setupGlobalFilter() {

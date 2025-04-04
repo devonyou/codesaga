@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package auth;
+
+
+service AuthService {
+    rpc FindOrCreateUser(FindOrCreateUserRequest) returns (FindOrCreateUserResponse) {} 
+    rpc issueTokenByGithubId(IssueTokenByGithubIdRequest) returns (IssueTokenByGithubIdResponse) {}
+}
+
+message FindOrCreateUserRequest {
+    string id = 1;
+    string nodeId = 2;
+    string avatarUrl = 3;
+    string login = 4;
+    string name = 5;
+}
+
+message FindOrCreateUserResponse {
+    string id = 1;
+}
+
+message IssueTokenByGithubIdRequest {
+    string id = 1;
+}
+
+message IssueTokenByGithubIdResponse {
+    string accessToken = 1;
+    string refreshToken = 2;
+}
