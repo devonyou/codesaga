@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+package auth;
+
+
+service AuthService {
+    rpc FindOrCreateUser(FindOrCreateUserRequest) returns (FindOrCreateUserResponse) {} 
+    rpc issueTokenByUserId(IssueTokenByUserIdRequest) returns (IssueTokenByUserIdResponse) {}
+    rpc verifyToken(VerifyTokenRequest) returns (VerifyTokenResponse) {}
+}
+
+message FindOrCreateUserRequest {
+    string id = 1;
+    string nodeId = 2;
+    string avatarUrl = 3;
+    string login = 4;
+    string name = 5;
+}
+
+message FindOrCreateUserResponse {
+    string id = 1;
+}
+
+message IssueTokenByUserIdRequest {
+    string id = 1;
+}
+
+message IssueTokenByUserIdResponse {
+    string accessToken = 1;
+    string refreshToken = 2;
+}
+
+message VerifyTokenRequest {
+    string token = 1;
+    bool isRefresh = 2;
+}
+
+message VerifyTokenResponse {
+    string sub = 1;
+    string type = 2;
+}   

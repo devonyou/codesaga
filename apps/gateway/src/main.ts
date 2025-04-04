@@ -1,14 +1,18 @@
-import { NestFactory } from '@nestjs/core';
+import { NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
-import { Logger } from '@nestjs/common';
+import {
+    ClassSerializerInterceptor,
+    Logger,
+    ValidationPipe,
+} from '@nestjs/common';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { GrpcToHttpInterceptor } from 'nestjs-grpc-exceptions';
+import { HttpExceptionFilter } from '../common/filter/http.exception.filter';
 
 class Server {
-    private logger = new Logger('SERVER');
     private configService: ConfigService;
-    private HTTP_HOST: string;
     private HTTP_PORT: number;
 
     constructor(private app: NestExpressApplication) {
@@ -18,10 +22,12 @@ class Server {
 
     private init() {
         this.configService = this.app.get<ConfigService>(ConfigService);
-        this.HTTP_HOST = this.configService.get<string>('HTTP_HOST');
         this.HTTP_PORT = this.configService.get<number>('HTTP_PORT');
 
         this.setupSwagger();
+        this.setupGlobalInterceptor();
+        this.setupGlobalFilter();
+        this.setupGlobalPipe();
     }
 
     async start() {
@@ -29,24 +35,41 @@ class Server {
     }
 
     private setupSwagger() {
-        try {
-            const config = new DocumentBuilder()
-                .setTitle(this.configService.get<string>('SWAGGER_TITLE'))
-                .setDescription(
-                    this.configService.get<string>('SWAGGER_DESCRIPTION'),
-                )
-                .setVersion(this.configService.get<string>('SWAGGER_VERSION'))
-                .build();
+        const config = new DocumentBuilder()
+            .setTitle(this.configService.get<string>('SWAGGER_TITLE'))
+            .setDescription(
+                this.configService.get<string>('SWAGGER_DESCRIPTION'),
+            )
+            .setVersion(this.configService.get<string>('SWAGGER_VERSION'))
+            .build();
 
-            const document = SwaggerModule.createDocument(this.app, config);
-            SwaggerModule.setup(
-                this.configService.get<string>('SWAGGER_PATH'),
-                this.app,
-                document,
-            );
-        } catch (error) {
-            this.logger.error(error);
-        }
+        const document = SwaggerModule.createDocument(this.app, config);
+        SwaggerModule.setup(
+            this.configService.get<string>('SWAGGER_PATH'),
+            this.app,
+            document,
+        );
+    }
+
+    private setupGlobalInterceptor() {
+        this.app.useGlobalInterceptors(
+            new ClassSerializerInterceptor(this.app.get(Reflector)),
+        );
+        this.app.useGlobalInterceptors(new GrpcToHttpInterceptor());
+    }
+
+    private setupGlobalFilter() {
+        this.app.useGlobalFilters(new HttpExceptionFilter());
+    }
+
+    private setupGlobalPipe() {
+        this.app.useGlobalPipes(
+            new ValidationPipe({
+                transform: true,
+                whitelist: true,
+                forbidNonWhitelisted: false,
+            }),
+        );
     }
 }
 
@@ -67,5 +90,5 @@ bootstrap()
         );
     })
     .catch(error => {
-        new Logger(process.env.NODE_ENV).error(`🆘 Server error ${error}`);
+        new Logger(process.env.NODE_ENV).error(`❌ Server error ${error}`);
     });

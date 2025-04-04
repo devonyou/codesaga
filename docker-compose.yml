@@ -6,12 +6,25 @@ services:
             target: development
         command: npm run start:dev gateway
         ports:
-            - '3000:3000'
+            - '${GATEWAY_PORT}:3000'
         volumes:
             - .:/usr/src/app
             - /usr/src/app/node_modules
         env_file:
             - ./apps/gateway/.env
+    auth:
+        build:
+            context: .
+            dockerfile: ./apps/auth/Dockerfile
+            target: development
+        command: npm run start:dev auth
+        ports:
+            - '${AUTH_PORT}:3000'
+        volumes:
+            - .:/usr/src/app
+            - /usr/src/app/node_modules
+        env_file:
+            - ./apps/auth/.env
     mysql:
         image: mysql:5.7
         platform: linux/amd64
