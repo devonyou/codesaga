@@ -1,21 +1,21 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { DatabaseOutPort } from '../port/out/database.out.port';
 import { GrpcNotFoundException } from 'nestjs-grpc-exceptions';
 import { TokenOutPort } from '../port/out/token.out.port';
+import { UserRepositoryPort } from '../port/out/user.repository.port';
 
 @Injectable()
 export class IssueTokenUsecase {
     constructor(
-        @Inject('DatabaseOutPort')
-        private readonly databaseOutPort: DatabaseOutPort,
         @Inject('TokenOutPort')
         private readonly tokenOutPort: TokenOutPort,
+        @Inject('UserRepositoryPort')
+        private readonly userRepositoryPort: UserRepositoryPort,
     ) {}
 
     async execute(userId: string) {
-        const user = await this.databaseOutPort.findUserById(userId);
+        const user = await this.userRepositoryPort.findUserById(userId);
         if (!user) {
-            throw new GrpcNotFoundException('Use Not Found');
+            throw new GrpcNotFoundException('User Not Found');
         }
 
         return {

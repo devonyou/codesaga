@@ -17,6 +17,7 @@ export interface FindOrCreateUserRequest {
   avatarUrl: string;
   login: string;
   name: string;
+  role: string;
 }
 
 export interface FindOrCreateUserResponse {
@@ -40,6 +41,7 @@ export interface VerifyTokenRequest {
 export interface VerifyTokenResponse {
   sub: string;
   type: string;
+  role: string;
 }
 
 export const AUTH_PACKAGE_NAME = "auth";

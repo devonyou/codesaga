@@ -56,6 +56,7 @@ export class JwtTokenAdapter implements TokenOutPort {
             return {
                 sub: payload.sub,
                 type: payload.type,
+                role: payload.role,
             };
         } catch (err) {
             throw new GrpcUnauthenticatedException(err.message);

@@ -24,7 +24,7 @@ export class ThrottleInterceptor {
         const ip = req.ip;
         const minute = new Date().getMinutes();
         const key = `${req.method}_${req.path}_${ip}_${minute}`;
-        const limit = 5;
+        const limit = 20;
         const ttl = 60;
 
         const count = +(await this.redis.get(key)) || 0;

@@ -3,13 +3,14 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthController } from './adapter/application/controller/auth.controller';
 import validationSchema from '../common/config/validation.schema';
-import { TypeormAdapter } from './adapter/typeorm/typeorm.adapter';
 import { UserEntity } from './adapter/typeorm/entity/user.entity';
 import { FindOrCreateUserUsecase } from './usecase/findorcreate.user.usecase';
 import { IssueTokenUsecase } from './usecase/issue.token.usecase';
 import { JwtTokenAdapter } from './adapter/jwt/jwt.token.adapter';
 import { JwtService } from '@nestjs/jwt';
 import { VerifyTokenUsecase } from './usecase/verify.token.usecase';
+import { UserProfileEntity } from './adapter/typeorm/entity/user.profile.entity';
+import { UserRepositoryAdapter } from './adapter/typeorm/user.repository.adapter';
 
 @Module({
     imports: [
@@ -24,11 +25,11 @@ import { VerifyTokenUsecase } from './usecase/verify.token.usecase';
                 autoLoadEntities: true,
                 synchronize: true,
                 logging: true,
-                entities: [UserEntity],
+                entities: [UserEntity, UserProfileEntity],
             }),
             inject: [ConfigService],
         }),
-        TypeOrmModule.forFeature([UserEntity]),
+        TypeOrmModule.forFeature([UserEntity, UserProfileEntity]),
     ],
     controllers: [AuthController],
     providers: [
@@ -36,8 +37,8 @@ import { VerifyTokenUsecase } from './usecase/verify.token.usecase';
         FindOrCreateUserUsecase,
         IssueTokenUsecase,
         VerifyTokenUsecase,
-        { provide: 'DatabaseOutPort', useClass: TypeormAdapter },
         { provide: 'TokenOutPort', useClass: JwtTokenAdapter },
+        { provide: 'UserRepositoryPort', useClass: UserRepositoryAdapter },
     ],
 })
 export class AuthModule {}
