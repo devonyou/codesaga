@@ -10,6 +10,8 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { GrpcToHttpInterceptor } from 'nestjs-grpc-exceptions';
 import { HttpExceptionFilter } from '../common/filter/http.exception.filter';
+import { AuthService } from './auth/auth.service';
+import { AuthGuard } from './auth/guard/auth.guard';
 
 class Server {
     private configService: ConfigService;
@@ -27,6 +29,7 @@ class Server {
         this.setupSwagger();
         this.setupGlobalInterceptor();
         this.setupGlobalFilter();
+        this.setupGlobalGuard();
         this.setupGlobalPipe();
     }
 
@@ -56,6 +59,12 @@ class Server {
             new ClassSerializerInterceptor(this.app.get(Reflector)),
         );
         this.app.useGlobalInterceptors(new GrpcToHttpInterceptor());
+    }
+
+    private setupGlobalGuard() {
+        this.app.useGlobalGuards(
+            new AuthGuard(this.app.get(AuthService), this.app.get(Reflector)),
+        );
     }
 
     private setupGlobalFilter() {

@@ -1,11 +1,10 @@
 import { Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { GithubGuard } from './guard/github.guard';
-import { Auth } from './decorator/auth.decorator';
 import { AuthPayload } from './dto/auth.payload';
-import { RefreshGuard } from './guard/refresh.guard';
 import { User } from './decorator/user.decorator';
 import { JwtPayload } from './dto/jwt.payload';
+import { Auth } from './decorator/auth.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -17,12 +16,12 @@ export class AuthController {
 
     @Get('github/callback')
     @UseGuards(GithubGuard)
-    async callbackToGithub(@Auth() auth: AuthPayload) {
+    async callbackToGithub(@User() auth: AuthPayload) {
         return await this.authService.issueTokenByUserId(auth.id);
     }
 
     @Post('refresh')
-    @UseGuards(RefreshGuard)
+    @Auth(true)
     async issueToken(@User() user: JwtPayload) {
         return await this.authService.issueTokenByUserId(user.sub);
     }
