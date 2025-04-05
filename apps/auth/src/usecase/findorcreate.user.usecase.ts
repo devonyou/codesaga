@@ -1,15 +1,12 @@
 import { FindOrCreateUserRequest } from '@app/common/grpc/proto/auth';
 import { Role, UserDomain } from '../domain/user.domain';
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { UserProfileDomain } from '../domain/user.profile.domain';
 import { UserRepositoryPort } from '../port/out/user.repository.port';
 
 @Injectable()
 export class FindOrCreateUserUsecase {
-    constructor(
-        @Inject('UserRepositoryPort')
-        private readonly userRepositoryPort: UserRepositoryPort,
-    ) {}
+    constructor(private readonly userRepositoryPort: UserRepositoryPort) {}
 
     async execute(dto: FindOrCreateUserRequest): Promise<UserDomain> {
         const user = await this.userRepositoryPort.findUserByProviderId(dto.id);

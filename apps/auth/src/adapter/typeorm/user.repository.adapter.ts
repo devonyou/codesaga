@@ -29,6 +29,7 @@ export class UserRepositoryAdapter implements UserRepositoryPort {
         const result = await this.userRepository.findOne({
             where: { providerId: providerId },
             relations: ['userProfile'],
+            // loadEagerRelations: true,
         });
         if (result) return new UserEntityMapper(result).toDomain();
         else return null;

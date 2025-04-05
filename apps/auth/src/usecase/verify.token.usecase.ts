@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { TokenOutPort } from '../port/out/token.out.port';
 import { AuthMicroService } from '@app/common';
 import { GrpcNotFoundException } from 'nestjs-grpc-exceptions';
@@ -7,8 +7,7 @@ import { UserRepositoryPort } from '../port/out/user.repository.port';
 @Injectable()
 export class VerifyTokenUsecase {
     constructor(
-        @Inject('TokenOutPort') private readonly tokenOutPort: TokenOutPort,
-        @Inject('UserRepositoryPort')
+        private readonly tokenOutPort: TokenOutPort,
         private readonly userRepositoryPort: UserRepositoryPort,
     ) {}
 

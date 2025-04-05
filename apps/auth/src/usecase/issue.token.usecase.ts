@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { GrpcNotFoundException } from 'nestjs-grpc-exceptions';
 import { TokenOutPort } from '../port/out/token.out.port';
 import { UserRepositoryPort } from '../port/out/user.repository.port';
@@ -6,9 +6,7 @@ import { UserRepositoryPort } from '../port/out/user.repository.port';
 @Injectable()
 export class IssueTokenUsecase {
     constructor(
-        @Inject('TokenOutPort')
         private readonly tokenOutPort: TokenOutPort,
-        @Inject('UserRepositoryPort')
         private readonly userRepositoryPort: UserRepositoryPort,
     ) {}
 

@@ -3,8 +3,15 @@ import {
     VerifyTokenResponse,
 } from '@app/common/grpc/proto/auth';
 import { UserDomain } from '../../domain/user.domain';
+import { Injectable } from '@nestjs/common';
 
-export interface TokenOutPort {
-    verifyToken(request: VerifyTokenRequest): Promise<VerifyTokenResponse>;
-    issueToken(payload: UserDomain, isRefresh: boolean): Promise<string>;
+@Injectable()
+export abstract class TokenOutPort {
+    abstract verifyToken(
+        request: VerifyTokenRequest,
+    ): Promise<VerifyTokenResponse>;
+    abstract issueToken(
+        payload: UserDomain,
+        isRefresh: boolean,
+    ): Promise<string>;
 }

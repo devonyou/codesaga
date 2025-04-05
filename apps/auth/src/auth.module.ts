@@ -11,6 +11,8 @@ import { JwtService } from '@nestjs/jwt';
 import { VerifyTokenUsecase } from './usecase/verify.token.usecase';
 import { UserProfileEntity } from './adapter/typeorm/entity/user.profile.entity';
 import { UserRepositoryAdapter } from './adapter/typeorm/user.repository.adapter';
+import { TokenOutPort } from './port/out/token.out.port';
+import { UserRepositoryPort } from './port/out/user.repository.port';
 
 @Module({
     imports: [
@@ -37,8 +39,8 @@ import { UserRepositoryAdapter } from './adapter/typeorm/user.repository.adapter
         FindOrCreateUserUsecase,
         IssueTokenUsecase,
         VerifyTokenUsecase,
-        { provide: 'TokenOutPort', useClass: JwtTokenAdapter },
-        { provide: 'UserRepositoryPort', useClass: UserRepositoryAdapter },
+        { provide: TokenOutPort, useClass: JwtTokenAdapter },
+        { provide: UserRepositoryPort, useClass: UserRepositoryAdapter },
     ],
 })
 export class AuthModule {}
