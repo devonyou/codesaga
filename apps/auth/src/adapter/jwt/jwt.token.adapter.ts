@@ -13,7 +13,7 @@ export class JwtTokenAdapter implements TokenOutPort {
     private accessSecret: string;
     private refreshSecret: string;
     private accessExpireIn: number;
-    private refresExpireIn: number;
+    private refreshExpireIn: number;
 
     constructor(
         private readonly jwtService: JwtService,
@@ -24,7 +24,7 @@ export class JwtTokenAdapter implements TokenOutPort {
         this.accessExpireIn = this.configService.get<number>(
             'JWT_ACCESS_EXPIRATION_TIME',
         );
-        this.refresExpireIn = this.configService.get<number>(
+        this.refreshExpireIn = this.configService.get<number>(
             'JWT_REFRESH_EXPIRATION_TIME',
         );
     }
@@ -38,7 +38,7 @@ export class JwtTokenAdapter implements TokenOutPort {
             {
                 secret: isRefresh ? this.refreshSecret : this.accessSecret,
                 expiresIn: isRefresh
-                    ? this.refresExpireIn
+                    ? this.refreshExpireIn
                     : this.accessExpireIn,
             },
         );
@@ -47,11 +47,10 @@ export class JwtTokenAdapter implements TokenOutPort {
     async verifyToken(
         request: VerifyTokenRequest,
     ): Promise<VerifyTokenResponse> {
+        const { token, isRefresh } = request;
         try {
-            const payload = await this.jwtService.verifyAsync(request.token, {
-                secret: request.isRefresh
-                    ? this.refreshSecret
-                    : this.accessSecret,
+            const payload = await this.jwtService.verifyAsync(token, {
+                secret: isRefresh ? this.refreshSecret : this.accessSecret,
                 ignoreExpiration: false,
             });
             return {
@@ -59,7 +58,7 @@ export class JwtTokenAdapter implements TokenOutPort {
                 type: payload.type,
             };
         } catch (err) {
-            throw new GrpcUnauthenticatedException('Invalid token');
+            throw new GrpcUnauthenticatedException(err.message);
         }
     }
 }
