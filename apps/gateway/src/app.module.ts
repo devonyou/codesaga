@@ -1,9 +1,10 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ClientsModule } from '@nestjs/microservices';
 import { AuthModule } from './auth/auth.module';
 import validationSchema from '../common/config/validation.schema';
 import { grpcClients } from '../common/grpc/clients';
+import { HttpLoggerMiddleware } from '../common/middleware/http.logger.middelware';
 
 @Module({
     imports: [
@@ -19,4 +20,8 @@ import { grpcClients } from '../common/grpc/clients';
         AuthModule,
     ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+    configure(consumer: MiddlewareConsumer) {
+        consumer.apply(HttpLoggerMiddleware).forRoutes('*');
+    }
+}
