@@ -58,3 +58,5 @@ report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 webui
 mysql
 !mysql/my.cnf
+redis
+!redis/redis.conf

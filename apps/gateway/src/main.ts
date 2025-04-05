@@ -12,6 +12,8 @@ import { GrpcToHttpInterceptor } from 'nestjs-grpc-exceptions';
 import { HttpExceptionFilter } from '../common/filter/http.exception.filter';
 import { AuthService } from './auth/auth.service';
 import { AuthGuard } from './auth/guard/auth.guard';
+import { ThrottleInterceptor } from '../common/interceptor/throttle.interceptor';
+import { RedisService } from '@liaoliaots/nestjs-redis';
 
 class Server {
     private configService: ConfigService;
@@ -59,6 +61,9 @@ class Server {
             new ClassSerializerInterceptor(this.app.get(Reflector)),
         );
         this.app.useGlobalInterceptors(new GrpcToHttpInterceptor());
+        this.app.useGlobalInterceptors(
+            new ThrottleInterceptor(this.app.get(RedisService)),
+        );
     }
 
     private setupGlobalGuard() {
