@@ -14,6 +14,7 @@ import { UserRepositoryAdapter } from './adapter/typeorm/user.repository.adapter
 import { TokenOutPort } from './port/out/token.out.port';
 import { UserRepositoryPort } from './port/out/user.repository.port';
 import { UserTokenEntity } from './adapter/typeorm/entity/user.token.entity';
+import { FindUserUsecase } from './usecase/find.user.usecase';
 
 @Module({
     imports: [
@@ -27,7 +28,7 @@ import { UserTokenEntity } from './adapter/typeorm/entity/user.token.entity';
                 url: configService.get<string>('DB_URL'),
                 autoLoadEntities: true,
                 synchronize: true,
-                logging: true,
+                logging: false,
                 entities: [UserEntity, UserProfileEntity, UserTokenEntity],
             }),
             inject: [ConfigService],
@@ -44,6 +45,7 @@ import { UserTokenEntity } from './adapter/typeorm/entity/user.token.entity';
         FindOrCreateUserUsecase,
         IssueTokenUsecase,
         VerifyTokenUsecase,
+        FindUserUsecase,
         { provide: TokenOutPort, useClass: JwtTokenAdapter },
         { provide: UserRepositoryPort, useClass: UserRepositoryAdapter },
     ],

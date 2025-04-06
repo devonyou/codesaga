@@ -44,6 +44,15 @@ export interface VerifyTokenResponse {
   role: string;
 }
 
+export interface FindUserByIdRequest {
+  userId: string;
+}
+
+export interface FindUserByIdResponse {
+  id: string;
+  name: string;
+}
+
 export const AUTH_PACKAGE_NAME = "auth";
 
 export interface AuthServiceClient {
@@ -52,6 +61,8 @@ export interface AuthServiceClient {
   issueTokenByUserId(request: IssueTokenByUserIdRequest, metadata?: Metadata): Observable<IssueTokenByUserIdResponse>;
 
   verifyToken(request: VerifyTokenRequest, metadata?: Metadata): Observable<VerifyTokenResponse>;
+
+  findUserById(request: FindUserByIdRequest, metadata?: Metadata): Observable<FindUserByIdResponse>;
 }
 
 export interface AuthServiceController {
@@ -69,11 +80,16 @@ export interface AuthServiceController {
     request: VerifyTokenRequest,
     metadata?: Metadata,
   ): Promise<VerifyTokenResponse> | Observable<VerifyTokenResponse> | VerifyTokenResponse;
+
+  findUserById(
+    request: FindUserByIdRequest,
+    metadata?: Metadata,
+  ): Promise<FindUserByIdResponse> | Observable<FindUserByIdResponse> | FindUserByIdResponse;
 }
 
 export function AuthServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = ["findOrCreateUser", "issueTokenByUserId", "verifyToken"];
+    const grpcMethods: string[] = ["findOrCreateUser", "issueTokenByUserId", "verifyToken", "findUserById"];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
       GrpcMethod("AuthService", method)(constructor.prototype[method], method, descriptor);

@@ -39,6 +39,24 @@
       "compilerOptions": {
         "tsConfigPath": "apps/auth/tsconfig.app.json"
       }
+    },
+    "codesaga": {
+      "type": "application",
+      "root": "apps/codesaga",
+      "entryFile": "main",
+      "sourceRoot": "apps/codesaga/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/codesaga/tsconfig.app.json"
+      }
+    },
+    "llama": {
+      "type": "application",
+      "root": "apps/llama",
+      "entryFile": "main",
+      "sourceRoot": "apps/llama/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/llama/tsconfig.app.json"
+      }
     }
   }
 }
