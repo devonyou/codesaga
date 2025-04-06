@@ -24,6 +24,7 @@ export class AuthService implements OnModuleInit {
             nodeId: githubProfile.node_id,
             avatarUrl: githubProfile.avatar_url,
             login: githubProfile.login,
+            role: 'user',
         });
         const resp = await lastValueFrom(stream);
         return resp;

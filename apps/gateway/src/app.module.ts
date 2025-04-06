@@ -2,10 +2,10 @@ import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ClientsModule } from '@nestjs/microservices';
 import { AuthModule } from './auth/auth.module';
-import validationSchema from '../common/config/validation.schema';
-import { grpcClients } from '../common/grpc/clients';
-import { HttpLoggerMiddleware } from '../common/middleware/http.logger.middelware';
 import { RedisModule } from '@liaoliaots/nestjs-redis';
+import validationSchema from './common/config/validation.schema';
+import { grpcClients } from './common/grpc/clients';
+import { HttpLoggerMiddleware } from './common/middleware/http.logger.middelware';
 
 @Module({
     imports: [

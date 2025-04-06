@@ -12,7 +12,9 @@ export class AuthController {
 
     @Get('github')
     @UseGuards(GithubGuard)
-    redirectToGithub() {}
+    redirectToGithub() {
+        return null;
+    }
 
     @Get('github/callback')
     @UseGuards(GithubGuard)
@@ -24,5 +26,11 @@ export class AuthController {
     @Auth(true)
     async issueToken(@User() user: JwtPayload) {
         return await this.authService.issueTokenByUserId(user.sub);
+    }
+
+    @Post('test')
+    @Auth(false)
+    test(@User() user: JwtPayload) {
+        return user;
     }
 }

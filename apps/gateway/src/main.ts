@@ -9,11 +9,12 @@ import {
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { GrpcToHttpInterceptor } from 'nestjs-grpc-exceptions';
-import { HttpExceptionFilter } from '../common/filter/http.exception.filter';
 import { AuthService } from './auth/auth.service';
 import { AuthGuard } from './auth/guard/auth.guard';
-import { ThrottleInterceptor } from '../common/interceptor/throttle.interceptor';
 import { RedisService } from '@liaoliaots/nestjs-redis';
+import { RBACGuard } from './auth/guard/rbac.guard';
+import { ThrottleInterceptor } from './common/interceptor/throttle.interceptor';
+import { HttpExceptionFilter } from './common/filter/http.exception.filter';
 
 class Server {
     private configService: ConfigService;
@@ -70,6 +71,7 @@ class Server {
         this.app.useGlobalGuards(
             new AuthGuard(this.app.get(AuthService), this.app.get(Reflector)),
         );
+        this.app.useGlobalGuards(new RBACGuard(this.app.get(Reflector)));
     }
 
     private setupGlobalFilter() {
