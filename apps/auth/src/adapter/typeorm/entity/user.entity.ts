@@ -21,7 +21,7 @@ export class UserEntity {
     id: string;
 
     @Column({
-        default: Role.user,
+        default: Role.USER,
         type: 'enum',
         enum: Role,
         nullable: false,

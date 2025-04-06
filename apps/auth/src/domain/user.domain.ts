@@ -1,9 +1,9 @@
 import { UserProfileDomain } from './user.profile.domain';
 
 export enum Role {
-    admin = 'admin',
-    paidUser = 'paidUser',
-    user = 'user',
+    ADMIN = 'admin',
+    PAID_USER = 'paidUser',
+    USER = 'user',
 }
 
 export class UserDomain {

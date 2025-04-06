@@ -10,6 +10,8 @@ export default Joi.object({
     GITHUB_CLIENT_ID: Joi.string().required(),
     AUTH_GRPC_HOST: Joi.string().required(),
     AUTH_GRPC_PORT: Joi.number().required(),
+    CODESAGA_GRPC_HOST: Joi.string().required(),
+    CODESAGA_GRPC_PORT: Joi.number().required(),
     REDIS_HOST: Joi.string().required(),
     REDIS_PORT: Joi.number().required(),
     REDIS_PASSWORD: Joi.string().required(),

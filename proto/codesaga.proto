@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package codesaga;
+
+service CodesagaService {
+    rpc CreateCodesaga(CreateCodesagaRequest) returns (CreateCodesagaResponse) {}
+}
+
+message CreateCodesagaRequest {
+    string userId = 1;
+    string requestType = 2;
+    string language = 3;
+    string codeContext = 4;
+    string filepath = 5;
+    int32 lineNumber = 6;
+}
+
+message CreateCodesagaResponse {
+    message User {
+		string id = 1;
+		string name = 2;
+	}
+
+    string id = 1;
+    string requestType = 2;
+    string language = 3;
+    string codeContext = 4;
+    User user = 5;
+}
+

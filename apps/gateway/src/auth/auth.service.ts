@@ -14,7 +14,7 @@ export class AuthService implements OnModuleInit {
     ) {}
 
     onModuleInit() {
-        this.authService = this.authMicroService.getService('AuthService');
+        this.authService = this.authMicroService.getService(AUTH_SERVICE_NAME);
     }
 
     async findOrCreateUser(githubProfile) {

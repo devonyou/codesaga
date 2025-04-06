@@ -6,6 +6,7 @@ import { RedisModule } from '@liaoliaots/nestjs-redis';
 import validationSchema from './common/config/validation.schema';
 import { grpcClients } from './common/grpc/clients';
 import { HttpLoggerMiddleware } from './common/middleware/http.logger.middelware';
+import { CodesagaModule } from './codesaga/codesaga.module';
 
 @Module({
     imports: [
@@ -29,6 +30,7 @@ import { HttpLoggerMiddleware } from './common/middleware/http.logger.middelware
         }),
 
         AuthModule,
+        CodesagaModule,
     ],
 })
 export class AppModule implements NestModule {

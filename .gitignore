@@ -60,3 +60,4 @@ mysql
 !mysql/my.cnf
 redis
 !redis/redis.conf
+mongo

@@ -6,6 +6,7 @@ service AuthService {
     rpc FindOrCreateUser(FindOrCreateUserRequest) returns (FindOrCreateUserResponse) {} 
     rpc issueTokenByUserId(IssueTokenByUserIdRequest) returns (IssueTokenByUserIdResponse) {}
     rpc verifyToken(VerifyTokenRequest) returns (VerifyTokenResponse) {}
+    rpc findUserById(FindUserByIdRequest) returns (FindUserByIdResponse) {}
 }
 
 message FindOrCreateUserRequest {
@@ -40,3 +41,12 @@ message VerifyTokenResponse {
     string type = 2;
     string role = 3;
 }   
+
+message FindUserByIdRequest {
+    string userId = 1;
+}
+
+message FindUserByIdResponse {
+    string id = 1;
+    string name = 2;
+}
