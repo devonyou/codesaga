@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { UserDomain } from '../../domain/user.domain';
 import { UserProfileDomain } from '../../domain/user.profile.domain';
+import { TokenType, UserTokenDomain } from '../../domain/user.token.domain';
 
 @Injectable()
 export abstract class UserRepositoryPort {
@@ -13,4 +14,16 @@ export abstract class UserRepositoryPort {
     abstract createUserProfile(
         userProfile: UserProfileDomain,
     ): Promise<UserProfileDomain>;
+
+    abstract createUserToken(
+        userId: string,
+        refreshToken: string,
+        tokenType: TokenType,
+    ): Promise<UserTokenDomain>;
+
+    abstract findUserTokenByToken(
+        rawToken: string,
+        userId: string,
+        tokenType: TokenType,
+    ): Promise<UserTokenDomain>;
 }

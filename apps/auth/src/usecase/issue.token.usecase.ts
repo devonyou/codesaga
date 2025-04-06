@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { GrpcNotFoundException } from 'nestjs-grpc-exceptions';
 import { TokenOutPort } from '../port/out/token.out.port';
 import { UserRepositoryPort } from '../port/out/user.repository.port';
+import { TokenType } from '../domain/user.token.domain';
 
 @Injectable()
 export class IssueTokenUsecase {
@@ -16,9 +17,18 @@ export class IssueTokenUsecase {
             throw new GrpcNotFoundException('User Not Found');
         }
 
+        const accessToken = await this.tokenOutPort.issueToken(user, false);
+        const refreshToken = await this.tokenOutPort.issueToken(user, true);
+
+        await this.userRepositoryPort.createUserToken(
+            userId,
+            refreshToken,
+            TokenType.REFRESH,
+        );
+
         return {
-            accessToken: await this.tokenOutPort.issueToken(user, false),
-            refreshToken: await this.tokenOutPort.issueToken(user, true),
+            accessToken,
+            refreshToken,
         };
     }
 }

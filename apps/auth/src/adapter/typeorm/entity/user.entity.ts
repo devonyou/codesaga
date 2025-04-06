@@ -2,6 +2,7 @@ import {
     Column,
     CreateDateColumn,
     Entity,
+    OneToMany,
     OneToOne,
     PrimaryGeneratedColumn,
     Unique,
@@ -11,6 +12,7 @@ import {
 import { UserProfileEntity } from './user.profile.entity';
 import { Exclude } from 'class-transformer';
 import { Role } from 'apps/auth/src/domain/user.domain';
+import { UserTokenEntity } from './user.token.entity';
 
 @Entity('user')
 @Unique(['providerId'])
@@ -49,4 +51,7 @@ export class UserEntity {
 
     @OneToOne(() => UserProfileEntity, userProfile => userProfile.user)
     userProfile: UserProfileEntity;
+
+    @OneToMany(() => UserTokenEntity, token => token.user)
+    tokens: UserTokenEntity[];
 }

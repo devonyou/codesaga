@@ -13,6 +13,7 @@ import { UserProfileEntity } from './adapter/typeorm/entity/user.profile.entity'
 import { UserRepositoryAdapter } from './adapter/typeorm/user.repository.adapter';
 import { TokenOutPort } from './port/out/token.out.port';
 import { UserRepositoryPort } from './port/out/user.repository.port';
+import { UserTokenEntity } from './adapter/typeorm/entity/user.token.entity';
 
 @Module({
     imports: [
@@ -27,11 +28,15 @@ import { UserRepositoryPort } from './port/out/user.repository.port';
                 autoLoadEntities: true,
                 synchronize: true,
                 logging: true,
-                entities: [UserEntity, UserProfileEntity],
+                entities: [UserEntity, UserProfileEntity, UserTokenEntity],
             }),
             inject: [ConfigService],
         }),
-        TypeOrmModule.forFeature([UserEntity, UserProfileEntity]),
+        TypeOrmModule.forFeature([
+            UserEntity,
+            UserProfileEntity,
+            UserTokenEntity,
+        ]),
     ],
     controllers: [AuthController],
     providers: [

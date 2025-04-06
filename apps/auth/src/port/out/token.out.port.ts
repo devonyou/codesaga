@@ -10,6 +10,7 @@ export abstract class TokenOutPort {
     abstract verifyToken(
         request: VerifyTokenRequest,
     ): Promise<VerifyTokenResponse>;
+
     abstract issueToken(
         payload: UserDomain,
         isRefresh: boolean,
