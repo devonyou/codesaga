@@ -8,5 +8,6 @@ import { PassportModule } from '@nestjs/passport';
     imports: [PassportModule.register({ defaultStrategy: 'github' })],
     controllers: [AuthController],
     providers: [AuthService, GithubStrategy],
+    exports: [AuthService],
 })
 export class AuthModule {}

@@ -51,6 +51,19 @@ services:
             - /usr/src/app/node_modules
         env_file:
             - ./apps/llama/.env
+    chat:
+        build:
+            context: .
+            dockerfile: ./apps/chat/Dockerfile
+            target: development
+        command: npm run start:dev chat
+        ports:
+            - '${CHAT_PORT}:3000'
+        volumes:
+            - .:/usr/src/app
+            - /usr/src/app/node_modules
+        env_file:
+            - ./apps/chat/.env
     mysql:
         image: mysql:5.7
         platform: linux/amd64

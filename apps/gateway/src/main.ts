@@ -10,11 +10,11 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { GrpcToHttpInterceptor } from 'nestjs-grpc-exceptions';
 import { AuthService } from './auth/auth.service';
-import { AuthGuard } from './auth/guard/auth.guard';
 import { RedisService } from '@liaoliaots/nestjs-redis';
 import { RBACGuard } from './auth/guard/rbac.guard';
 import { ThrottleInterceptor } from './common/interceptor/throttle.interceptor';
 import { HttpExceptionFilter } from './common/filter/http.exception.filter';
+import { AuthGuard } from './auth/guard/auth.guard';
 
 class Server {
     private configService: ConfigService;
