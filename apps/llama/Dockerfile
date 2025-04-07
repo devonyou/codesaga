@@ -8,12 +8,12 @@ COPY nest-cli.json nest-cli.json
 
 RUN npm i
 
-COPY apps/codesaga apps/codesaga
+COPY apps/llama apps/llama
 COPY libs libs
 
-RUN npm run build codesaga
+RUN npm run build llama
 
-CMD [ "npm", "run", "start:dev", "codesaga" ]
+CMD [ "npm", "run", "start:dev", "llama" ]
 
 FROM node:alpine as production
 
@@ -29,4 +29,4 @@ RUN npm ci --omit=dev
 COPY --from=development /usr/src/app/dist ./dist
 COPY proto proto
 
-CMD [ "node", "dist/apps/codesaga/main"]
+CMD [ "node", "dist/apps/llama/main"]

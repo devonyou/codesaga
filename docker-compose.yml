@@ -38,6 +38,19 @@ services:
             - /usr/src/app/node_modules
         env_file:
             - ./apps/codesaga/.env
+    llama:
+        build:
+            context: .
+            dockerfile: ./apps/llama/Dockerfile
+            target: development
+        command: npm run start:dev llama
+        ports:
+            - '${LLAMA_PORT}:3000'
+        volumes:
+            - .:/usr/src/app
+            - /usr/src/app/node_modules
+        env_file:
+            - ./apps/llama/.env
     mysql:
         image: mysql:5.7
         platform: linux/amd64
