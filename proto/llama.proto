@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package llama;
+
+service LlamaService {
+	rpc CreateLLamaRequest(CreateLLamaRequestRequest) returns (CreateLLamaRequestResponse) {}
+}
+
+message CreateLLamaRequestRequest {
+    string userId = 1;
+    string codesagaRequestId = 2;
+    string requestType = 3;
+    string codeContext = 4;
+}
+
+message CreateLLamaRequestResponse {
+    string id = 1;
+    string response = 2;
+}

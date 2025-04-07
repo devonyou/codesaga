@@ -26,6 +26,7 @@ export interface CreateCodesagaResponse {
   language: string;
   codeContext: string;
   user: CreateCodesagaResponse_User | undefined;
+  response: string;
 }
 
 export interface CreateCodesagaResponse_User {
@@ -33,10 +34,39 @@ export interface CreateCodesagaResponse_User {
   name: string;
 }
 
+export interface UpdateCodesagaRequest {
+  id: string;
+  response?: string | undefined;
+  status?: string | undefined;
+}
+
+export interface UpdateCodesagaResponse {
+  id: string;
+  response: string;
+  status: string;
+  codeContext: string;
+}
+
+export interface FindCodesagaByIdRequest {
+  id: string;
+}
+
+export interface FindCodesagaByIdResponse {
+  id: string;
+  language: string;
+  codeContext: string;
+  status: string;
+  response: string;
+}
+
 export const CODESAGA_PACKAGE_NAME = "codesaga";
 
 export interface CodesagaServiceClient {
   createCodesaga(request: CreateCodesagaRequest, metadata?: Metadata): Observable<CreateCodesagaResponse>;
+
+  updateCodesaga(request: UpdateCodesagaRequest, metadata?: Metadata): Observable<UpdateCodesagaResponse>;
+
+  findCodesagaById(request: FindCodesagaByIdRequest, metadata?: Metadata): Observable<FindCodesagaByIdResponse>;
 }
 
 export interface CodesagaServiceController {
@@ -44,11 +74,21 @@ export interface CodesagaServiceController {
     request: CreateCodesagaRequest,
     metadata?: Metadata,
   ): Promise<CreateCodesagaResponse> | Observable<CreateCodesagaResponse> | CreateCodesagaResponse;
+
+  updateCodesaga(
+    request: UpdateCodesagaRequest,
+    metadata?: Metadata,
+  ): Promise<UpdateCodesagaResponse> | Observable<UpdateCodesagaResponse> | UpdateCodesagaResponse;
+
+  findCodesagaById(
+    request: FindCodesagaByIdRequest,
+    metadata?: Metadata,
+  ): Promise<FindCodesagaByIdResponse> | Observable<FindCodesagaByIdResponse> | FindCodesagaByIdResponse;
 }
 
 export function CodesagaServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = ["createCodesaga"];
+    const grpcMethods: string[] = ["createCodesaga", "updateCodesaga", "findCodesagaById"];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
       GrpcMethod("CodesagaService", method)(constructor.prototype[method], method, descriptor);

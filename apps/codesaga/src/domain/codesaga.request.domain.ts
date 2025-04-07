@@ -14,26 +14,27 @@ export enum RequestStatus {
     FAILED = 'FAILED',
 }
 
-export class CodeRequestDomain {
+export class CodesagaRequestDomain {
     id: string;
     user: UserDomain;
     requestType: RequestType;
     language: string;
-    response: string;
     status: RequestStatus;
     filepath: string;
     codeContext: string;
+    response: string;
 
     constructor(
         params: Pick<
-            CodeRequestDomain,
-            'user' | 'requestType' | 'language' | 'codeContext'
+            CodesagaRequestDomain,
+            'user' | 'requestType' | 'language' | 'codeContext' | 'status'
         >,
     ) {
         this.user = params.user;
         this.requestType = params.requestType;
         this.language = params.language;
         this.codeContext = params.codeContext;
+        this.status = params.status;
     }
 
     setId(id: string) {

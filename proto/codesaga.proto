@@ -4,6 +4,8 @@ package codesaga;
 
 service CodesagaService {
     rpc CreateCodesaga(CreateCodesagaRequest) returns (CreateCodesagaResponse) {}
+    rpc UpdateCodesaga(UpdateCodesagaRequest) returns (UpdateCodesagaResponse) {}
+    rpc FindCodesagaById(FindCodesagaByIdRequest) returns (FindCodesagaByIdResponse) {}
 }
 
 message CreateCodesagaRequest {
@@ -26,5 +28,31 @@ message CreateCodesagaResponse {
     string language = 3;
     string codeContext = 4;
     User user = 5;
+    string response = 6;
 }
 
+message UpdateCodesagaRequest {
+    string id = 1;
+    optional string response = 2;
+    optional string status = 3;
+}
+
+message UpdateCodesagaResponse {
+    string id = 1;
+    string response = 2;
+    string status = 3;
+    string codeContext = 4;
+}
+
+message FindCodesagaByIdRequest {
+    string id = 1;
+    
+}
+
+message FindCodesagaByIdResponse {
+    string id = 1;
+    string language = 2;
+    string codeContext = 3;
+    string status = 4;
+    string response = 5;
+}

@@ -100,8 +100,8 @@ export class LLaMARequestDomain {
 ### 4.2 CodeSaga 도메인
 
 ```typescript
-// CodeRequestDomain
-export class CodeRequestDomain {
+// CodesagaRequestDomain
+export class CodesagaRequestDomain {
     id: string; // 요청의 고유 식별자
     userId: string; // 요청한 사용자 ID
     requestType: RequestType; // 요청 유형 (코드 완성/리팩토링/에러 수정)
@@ -138,11 +138,11 @@ sequenceDiagram
 
     User->>API Gateway: 코드 생성 요청
     API Gateway->>CodeSaga Service: 요청 전달
-    CodeSaga Service->>CodeRequestDomain: 요청 정보 저장
+    CodeSaga Service->>CodesagaRequestDomain: 요청 정보 저장
     CodeSaga Service->>CodeContextDomain: 코드 컨텍스트 저장
     CodeSaga Service->>LLaMA Model: AI 모델 요청
     LLaMA Model-->>CodeSaga Service: 응답 반환
-    CodeSaga Service->>CodeRequestDomain: 응답 업데이트
+    CodeSaga Service->>CodesagaRequestDomain: 응답 업데이트
     CodeSaga Service->>User: 최종 응답 반환
 ```
 

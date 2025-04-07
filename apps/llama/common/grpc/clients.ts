@@ -1,5 +1,10 @@
-import { AuthMicroService, LlamaMicroService } from '@app/common';
+import {
+    AuthMicroService,
+    CodesagaMicroService,
+    LlamaMicroService,
+} from '@app/common';
 import { AUTH_SERVICE_NAME } from '@app/common/grpc/proto/auth';
+import { CODESAGA_SERVICE_NAME } from '@app/common/grpc/proto/codesaga';
 import { LLAMA_SERVICE_NAME } from '@app/common/grpc/proto/llama';
 import { ConfigService } from '@nestjs/config';
 import { ClientsProviderAsyncOptions, Transport } from '@nestjs/microservices';
@@ -19,14 +24,14 @@ export const grpcClients: ClientsProviderAsyncOptions[] = [
         }),
     },
     {
-        name: LLAMA_SERVICE_NAME,
+        name: CODESAGA_SERVICE_NAME,
         inject: [ConfigService],
         useFactory: (configService: ConfigService) => ({
             transport: Transport.GRPC,
             options: {
-                package: LlamaMicroService.protobufPackage,
-                url: `${configService.get<string>('LLAMA_GRPC_HOST')}:${configService.get<number>('LLAMA_GRPC_PORT')}`,
-                protoPath: join(process.cwd(), 'proto', 'llama.proto'),
+                package: CodesagaMicroService.protobufPackage,
+                url: `${configService.get<string>('CODESAGA_GRPC_HOST')}:${configService.get<number>('CODESAGA_GRPC_PORT')}`,
+                protoPath: join(process.cwd(), 'proto', 'codesaga.proto'),
             },
         }),
     },
