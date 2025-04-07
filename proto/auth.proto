@@ -44,6 +44,7 @@ message VerifyTokenResponse {
 
 message FindUserByIdRequest {
     string userId = 1;
+    optional string roomId = 2;
 }
 
 message FindUserByIdResponse {

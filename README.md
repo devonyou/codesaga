@@ -1,5 +1,15 @@
 # CodeSaga AI 서비스
 
+### 🛠 기술 스택
+
+| 컴포넌트         | 기술 스택                                             |
+| ---------------- | ----------------------------------------------------- |
+| **Extension**    | TypeScript, Cursor API                                |
+| **Backend**      | NestJS (MSA), WebSocket, REST API, gRPC, Redis        |
+| **LLM**          | OLLAMA3 8B (`llama-3-Korean-Bllossom-8B-gguf-Q4_K_M`) |
+| **Infra**        | AWS EC2, Redis, Docker, Kafka (Saga Pattern)          |
+| **Architecture** | Hexagonal Architecture                                |
+
 ### 1. 개요
 
 **CodeSaga**는 개발자를 위한 Cursor 확장 프로그램으로, **코드 보완 및 리팩토링을 지원하는 Cursor 확장 기능**을 제공합니다.  
@@ -9,8 +19,42 @@ Meta의 **OLLAMA3 8B (`llama-3-Korean-Bllossom-8B-gguf-Q4_K_M`)** 모델을 기�
 
 ### 🚀 핵심 기능
 
-- [1. GENERATE : 독립적인 한 번의 응답](#generate)
-- [2. CHAT : 이전 대화를 기억하는 일반 대화형](#chat)
+### 1. GENERATE : 독립적인 한 번의 응답
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant CodeSaga MSA
+    participant LLaMA MSA
+    participant LLaMA Server
+
+    User->>CodeSaga MSA: 리팩토링 코드 요청
+    CodeSaga MSA-->>LLaMA MSA: AI 응답 요청
+    LLaMA MSA-->>LLaMA Server: AI 답변 생성
+    LLaMA Server-->>LLaMA MSA: 생성된 리팩토링 코드 응답
+    LLaMA MSA-->>CodeSaga MSA: AI 답변 응답
+    CodeSaga MSA->>User: 리팩토링 코드 응답
+```
+
+### 2. CHAT : 이전 대화를 기억하는 스트리밍 응답
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant WebSocket
+    participant API Gateway
+    participant Chat MSA
+    participant LLaMA Server
+
+    User->>WebSocket: WebSocket 연결 요청
+    WebSocket->>API Gateway: 세션 생성 요청
+    API Gateway->>Chat MSA: 사용자 요청 전달
+    Chat MSA->>LLaMA Server: AI답변 요청
+    LLaMA Server-->>Chat MSA: AI답변 응답
+    Chat MSA-->>API Gateway: 처리된 응답 반환
+    API Gateway-->>WebSocket: 스트리밍 응답 전송 (Redis, rxjs)
+    WebSocket-->>User: 응답 표시
+```
 
 ### 🎯 목표
 
@@ -52,36 +96,9 @@ CodeSaga는 Code Extension과 NestJS 기반의 서버, 그리고 LLaMA 모델이
 +------------------------+
 ```
 
-### 🛠 기술 스택
-
-| 컴포넌트         | 기술 스택                                             |
-| ---------------- | ----------------------------------------------------- |
-| **Extension**    | TypeScript, Cursor API                                |
-| **Backend**      | NestJS (MSA), WebSocket, REST API, gRPC, Redis        |
-| **LLM**          | OLLAMA3 8B (`llama-3-Korean-Bllossom-8B-gguf-Q4_K_M`) |
-| **Infra**        | AWS EC2, Redis, Docker, Kafka (Saga Pattern)          |
-| **Architecture** | hexagonal architecture                                |
-
 ### GENERATE
 
-### 4.1 GENERATE 시나리오
-
-```mermaid
-sequenceDiagram
-    participant User
-    participant CodeSaga MSA
-    participant LLaMA MSA
-    participant LLaMA Server
-
-    User->>CodeSaga MSA: 리팩토링 코드 요청
-    CodeSaga MSA-->>LLaMA MSA: AI 응답 요청
-    LLaMA MSA-->>LLaMA Server: AI 답변 생성
-    LLaMA Server-->>LLaMA MSA: 생성된 리팩토링 코드 응답
-    LLaMA MSA-->>CodeSaga MSA: AI 답변 응답
-    CodeSaga MSA->>User: 리팩토링 코드 응답
-```
-
-### 4.2 LLaMA 도메인
+### 4.1 LLaMA 도메인
 
 ```typescript
 // LLaMAInstanceDomain
@@ -113,7 +130,7 @@ export class LLaMARequestDomain {
 }
 ```
 
-### 4.3 CodeSaga 도메인
+### 4.2 CodeSaga 도메인
 
 ```typescript
 // CodesagaRequestDomain
@@ -141,29 +158,7 @@ export class CodeContextDomain {
 }
 ```
 
-### CHAT
-
-### 5.1 CHAT 시나리오
-
-```mermaid
-sequenceDiagram
-    participant User
-    participant WebSocket
-    participant API Gateway
-    participant Chat MSA
-    participant LLaMA Server
-
-    User->>WebSocket: WebSocket 연결 요청
-    WebSocket->>API Gateway: 세션 생성 요청
-    API Gateway->>Chat MSA: 사용자 요청 전달
-    Chat MSA->>LLaMA Server: AI답변 요청
-    LLaMA Server-->>Chat MSA: AI답변 응답
-    Chat MSA-->>API Gateway: 처리된 응답 반환
-    API Gateway-->>WebSocket: 최종 응답 전송
-    WebSocket-->>User: 응답 표시
-```
-
-### 6. 로드맵
+### 4. 로드맵
 
 ### ✅ 1단계: 기본 기능 개발
 
@@ -182,6 +177,6 @@ sequenceDiagram
 
 ### 🚀 3단계: 배포 및 확장
 
-- Cursor 마켓플레이스에 배포
+- Cursor 배포
 - 사용자 피드백 반영 및 개선
 - 지원하는 프로그래밍 언어 확장 (Python, TypeScript, etc.)

@@ -7,6 +7,7 @@ import validationSchema from './common/config/validation.schema';
 import { grpcClients } from './common/grpc/clients';
 import { HttpLoggerMiddleware } from './common/middleware/http.logger.middelware';
 import { CodesagaModule } from './codesaga/codesaga.module';
+import { ChatModule } from './chat/chat.module';
 
 @Module({
     imports: [
@@ -31,6 +32,7 @@ import { CodesagaModule } from './codesaga/codesaga.module';
 
         AuthModule,
         CodesagaModule,
+        ChatModule,
     ],
 })
 export class AppModule implements NestModule {

@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+package chat;
+
+service ChatService {
+    rpc findManyRooms (FindManyRoomsRequest) returns (FindManyRoomsResponse) {}
+	rpc findOrCreateChatRoom (FindOrCreateChatRoomRequest) returns (FindOrCreateChatRoomResponse) {}	
+	rpc createMessage (CreateMessageRequest) returns (CreateMessageResponse) {}
+}
+
+message FindManyRoomsRequest {
+    string userId = 1;
+}
+
+message FindManyRoomsResponse {
+	repeated Room rooms = 1;
+}
+
+message Room {
+	string id = 1;
+	User user = 2;
+}
+
+message User {
+	string id = 1;
+	string name = 2;
+}
+
+message FindOrCreateChatRoomRequest {
+	string userId = 1;
+	string roomId = 2;
+}
+
+message FindOrCreateChatRoomResponse {
+	Room room = 1;
+}
+
+message CreateMessageRequest {
+    string userId = 1;
+    string message = 2;
+    string roomId = 3;
+}
+
+message CreateMessageResponse {
+	
+}
